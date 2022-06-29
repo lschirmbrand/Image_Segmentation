@@ -1,23 +1,18 @@
 import matplotlib.pyplot as plt
-# from PIL import Image
-# import numpy as np
-# from scipy import ndimage as ndim
-# from scipy.ndimage import median_filter
 from skimage import (filters, io, morphology, color)
-# from skimage.feature import peak_local_max
-# from skimage.morphology.selem import disk
-# from skimage.segmentation import watershed
 import cv2 as cv
 
 # change default colormap
 plt.rcParams['image.cmap'] = 'gray'
 
-im_color = cv.cvtColor(cv.imread("images/pallete_simpel.jpg", cv.IMREAD_COLOR), cv.COLOR_BGR2RGB)
+im_color = cv.cvtColor(
+    cv.imread("images/pallete_simpel.jpg", cv.IMREAD_COLOR), cv.COLOR_BGR2RGB)
 im_gray = cv.cvtColor(im_color, cv.COLOR_BGR2GRAY)
 
 threshold = filters.threshold_otsu(im_gray)
 
-_, mask = cv.threshold(im_gray, thresh=threshold, maxval=255, type=cv.THRESH_BINARY)
+_, mask = cv.threshold(im_gray, thresh=threshold,
+                       maxval=255, type=cv.THRESH_BINARY)
 im_thresh_gray = cv.bitwise_and(im_gray, mask)
 
 mask3 = cv.cvtColor(mask, cv.COLOR_GRAY2BGR)  # 3 channel mask
