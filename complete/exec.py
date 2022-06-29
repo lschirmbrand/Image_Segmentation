@@ -2,6 +2,7 @@ from os import listdir
 from os.path import isfile, join
 import time
 import config
+from ImageContainer import ImageContainer
 import cv2 as cv
 from skimage import filters
 
@@ -60,32 +61,25 @@ def compute_mask_color(mask):
 def apply_mask(img, mask):
     return cv.bitwise_and(img, mask)
 
-# starting time
+
 start = time.time()
 
 images_paths = get_all_images_from_path(config.assets['image_path'])
 
-images = []
+image_container : ImageContainer = []
 for f in images_paths:
-    images.append(convert_color_bgr2rgb(
-        import_image(config.assets['image_path'], f)))
+    image_container.append(ImageContainer(convert_color_bgr2rgb(
+        import_image(config.assets['image_path'], f))))
 
-resized_images = []
-for i in images:
-    resized_images.append(resize_image(i, config.image['scale']))
+for i in image_container:
+    i.set_resized_image(resize_image(i.get_image(), config.image['scale']))
+    i.set_gray_image(convert_color_rgb2gray(i.get_resized_image()))
+    i.set_segmented_image(segment_image_treshold_color(i.get_resized_image(), i.get_gray_image()))
 
-gray_images = []
-for i in resized_images:
-    gray_images.append(convert_color_rgb2gray(i))
-
-segmented_images = []
-for i, image in enumerate(gray_images):
-    # segmented_images.append(segment_image_treshold_gray(image))
-    segmented_images.append(segment_image_treshold_color(resized_images[i], image))
 
 end = time.time()
 print(f"Runtime of the program is {end - start}")
 
-cv.imshow("Matches", segmented_images[0])
+cv.imshow("Matches", image_container[0].get_segmented_image())
 cv.waitKey(0)
 cv.destroyAllWindows()
