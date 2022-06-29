@@ -9,11 +9,14 @@ plt.rcParams['image.cmap'] = 'gray'
 images_color = []
 # images_color.append(cv.cvtColor(cv.imread("images/palette_1.jpg", cv.IMREAD_COLOR),
 #   cv.COLOR_BGR2RGB))
+# images_color.append(cv.cvtColor(cv.imread("images/palette_2.jpg", cv.IMREAD_COLOR),
+#                                 cv.COLOR_BGR2RGB))
+# images_color.append(cv.cvtColor(cv.imread("images/palette_3.jpg", cv.IMREAD_COLOR),
+#                                 cv.COLOR_BGR2RGB))
 images_color.append(cv.cvtColor(cv.imread("images/palette_2.jpg", cv.IMREAD_COLOR),
                                 cv.COLOR_BGR2RGB))
 images_color.append(cv.cvtColor(cv.imread("images/palette_3.jpg", cv.IMREAD_COLOR),
                                 cv.COLOR_BGR2RGB))
-
 
 images_gray = []
 i = 0

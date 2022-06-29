@@ -6,13 +6,14 @@ import cv2 as cv
 plt.rcParams['image.cmap'] = 'gray'
 
 im_color = cv.cvtColor(
-    cv.imread("images/pallete_simpel.jpg", cv.IMREAD_COLOR), cv.COLOR_BGR2RGB)
+    # cv.imread("images/pallete_simpel.jpg", cv.IMREAD_COLOR), cv.COLOR_BGR2RGB)
+    cv.imread("images/0.jpg", cv.IMREAD_COLOR), cv.COLOR_BGR2RGB)
 im_gray = cv.cvtColor(im_color, cv.COLOR_BGR2GRAY)
 
 threshold = filters.threshold_otsu(im_gray)
 
 _, mask = cv.threshold(im_gray, thresh=threshold,
-                       maxval=255, type=cv.THRESH_BINARY)
+                       maxval=255, type=cv.THRESH_BINARY_INV)
 im_thresh_gray = cv.bitwise_and(im_gray, mask)
 
 mask3 = cv.cvtColor(mask, cv.COLOR_GRAY2BGR)  # 3 channel mask
