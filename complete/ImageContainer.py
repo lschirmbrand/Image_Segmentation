@@ -4,6 +4,7 @@ class ImageContainer:
         self._resized_image = None
         self._gray_image = None
         self._segmented_image = None
+        self._segmented_image_gray = None
 
     def set_image(self, image):
         self._image = image
@@ -28,3 +29,9 @@ class ImageContainer:
 
     def get_segmented_image(self):
         return self._segmented_image
+
+    def set_segmented_image_gray(self, image):
+        self._segmented_image_gray = image
+
+    def get_segmented_image_gray(self):
+        return self._segmented_image_gray
