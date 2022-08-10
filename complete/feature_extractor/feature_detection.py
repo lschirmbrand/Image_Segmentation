@@ -9,7 +9,7 @@ def harris_corner_detection(image_container):
     dst = cv.cornerHarris(
         image_container.get_segmented_image_gray(), 2, 3, 0.04)
     dst = cv.dilate(dst, None)
-    image[dst > 0.01*dst.max()] = [0, 0, 255]
+    image[dst > 0.01 * dst.max()] = [0, 0, 255]
     # cv.imshow('Original', image_container.get_segmented_image())
     cv.imshow('Harris', image)
     if cv.waitKey(0) & 0xff == 27:
@@ -54,14 +54,16 @@ def blob_detection(image_container):
     if cv.waitKey(0) & 0xff == 27:
         cv.destroyAllWindows()
 
+
 def histogram_of_oriented_gradients(image_container):
     img = copy.deepcopy(image_container.get_segmented_image())
     _, hog_image = hog(img, orientations=8, pixels_per_cell=(16, 16),
-                        cells_per_block=(1, 1), visualize=True, multichannel=True)
+                       cells_per_block=(1, 1), visualize=True, multichannel=True)
     # cv.imshow('Original', image_container.get_segmented_image())
     cv.imshow('HoG', hog_image)
     if cv.waitKey(0) & 0xff == 27:
         cv.destroyAllWindows()
+
 
 def orb_detection(image_container):
     image = image_container.get_segmented_image()
@@ -73,3 +75,8 @@ def orb_detection(image_container):
     cv.imshow('ORB', im_with_keypoints)
     if cv.waitKey(0) & 0xff == 27:
         cv.destroyAllWindows()
+
+
+def calc_orb_keypoints(image_container, nfeatures=300):
+    detector = cv.ORB_create(nfeatures=nfeatures)
+    return detector.detectAndCompute(image_container.get_segmented_image(), None)

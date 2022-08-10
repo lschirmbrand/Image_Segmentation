@@ -1,25 +1,25 @@
+import os
 import time
 import config
-import matplotlib.pyplot as plt
-from ImageContainer import ImageContainer
-import cv2 as cv
+import numpy as np
+from match import *
+from ImageContainer import *
+from sfm import *
 from color_converter import converter
 from filehandler import filehandler
 from segmentation import (threshold_segmentation as thr_seg)
-from plotting import plotter
 from resizer import resizer
 from feature_extractor import feature_detection as fd
-from feature_extractor import feature_matching as fm
 
 start = time.time()
 
 images_paths = filehandler.get_all_images_from_path(
     config.assets['image_path'])
 
-image_container: ImageContainer = []
+image_container: list[ImageContainer] = []
 for f in images_paths:
     image_container.append(ImageContainer(converter.convert_color_bgr2rgb(
-        filehandler.import_image(config.assets['image_path'], f))))
+        filehandler.import_image(config.assets['image_path'], f)), f))
 
 for i in image_container:
     i.set_resized_image(resizer.resize_image(
@@ -29,12 +29,13 @@ for i in image_container:
         i.get_resized_image(), i.get_gray_image()))
     i.set_segmented_image_gray(thr_seg.segment_image_treshold_gray(i.get_gray_image()))
 
-images = []
-for i in image_container:
-    images.append(i.get_segmented_image())
+    keypoints, descriptors = fd.calc_orb_keypoints(i)
+    i.set_keypoints(keypoints)
+    i.set_descriptors(descriptors)
 
-# plt.figure(plotter.plot_images_list(images))
-# plt.show()
+matches = create_matches(image_container)
+K = np.loadtxt(os.path.join(config.assets['image_path'], 'images', 'K.txt'))
+sfm = sfm(image_container, )
 
 # fd.harris_corner_detection(image_container[0])
 # fd.shi_tomasi_corner_detection(image_container[0])
@@ -43,7 +44,8 @@ for i in image_container:
 # fd.histogram_of_oriented_gradients(image_container[0])
 # fd.orb_detection(image_container[0])
 
-fm.match(image_container, 100)
+# fm.match(image_container, 100)
+
 
 end = time.time()
 print(f"Runtime of the program is {end - start}")
